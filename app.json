@@ -1,0 +1,13 @@
+{
+  "pages": [
+    "pages/main/main",
+    "pages/line/line",
+    "pages/index/index"
+  ],
+  "window": {
+    "backgroundTextStyle": "dark",
+    "navigationBarBackgroundColor": "#fff",
+    "navigationBarTitleText": "珠海公交查询",
+    "navigationBarTextStyle": "black"
+  }
+}

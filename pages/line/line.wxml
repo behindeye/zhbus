@@ -1,0 +1,24 @@
+<!--pages/line/line.wxml-->
+<view>
+  <view class='line-direction'>
+    <view class='line-dire-item'>{{fromstation}}</view>
+    <image class='line-switch' src='/image/switch.png' mode='aspectFit'>
+    </image>
+    <view class='line-dire-item'>{{tostation}}</view>
+  </view>
+  <view class='line-info'>首班：{{begintime}} , 末班：{{endtime}} , 票价：{{price}}元</view>
+  <!-- <view class='refresh-msg' wx:if="{{refreshStatus == 1}}">正在刷新中···</view> -->
+  <view class='line-result'>
+    <block wx:for-items="{{stations.data}}" wx:key="{{stations.data.Id}}">
+      <view class='line-station'>
+        <view class='line-item'>{{item.Name}}</view>
+        <image class='current-item-logo' wx:if="{{item.LastPosition == 5}}" src='/image/bus.png' mode='aspectFit'></image>
+        <view class='current-item' wx:if="{{item.LastPosition == 5}}">{{item.BusNumber}}</view>
+      </view>
+      <view class='next-item' wx:if="{{item.LastPosition == 8}}">
+      <image src='/image/arrow.png' mode='aspectFit' class='next-item-logo'></image>
+      <view>{{item.BusNumber}}</view>
+      </view>
+    </block>
+  </view>
+</view>

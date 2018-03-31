@@ -1,0 +1,23 @@
+<!--pages/search/search.wxml-->
+<view class="search-container">
+  <image id='banner' src='/image/banner.jpg' mode='scaleToFillf'></image>
+  <view>
+    <!-- <view class='main-menu'>
+    <view class='menu-item item-search-online'>实时查询</view>
+      <view class='menu-item item-change-station'>换乘</view>
+      <view class='menu-item item-search-station'>站点查询</view> 
+    </view>-->
+    <view class='search-bar'>
+      <icon type='search' size='20' style='padding:5px;'></icon>
+      <input class='search-input' placeholder='请输入线路名称如：8' bindinput='searchBus' focus='true' confirm-type='search' bindconfirm='searchBus'></input>
+    </view>
+    <view class='search-result'>
+      <block wx:for-items="{{lines.data}}" wx:key="{{lines.data.Id}}">
+        <view class='result-item' bindtap='jumpToLine' data-name='{{item.LineNumber}}' data-id='{{item.Id}}' data-begintime='{{item.BeginTime}}' data-endtime='{{item.EndTime}}' data-price='{{item.Price}}' data-fromstation='{{item.FromStation}}' data-tostation='{{item.ToStation}}'>
+          <view class='item-line-name'>{{item.LineNumber}}</view>
+          <view class='item-direction'>{{item.FromStation}} -> {{item.ToStation}}</view>
+        </view>
+      </block>
+    </view>
+  </view>
+</view>

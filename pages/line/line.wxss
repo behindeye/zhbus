@@ -1,0 +1,82 @@
+/* pages/line/line.wxss */
+
+.line-info {
+  color: #888;
+  font-size: 15px;
+  text-align: center;
+  margin-top: 10px;
+}
+
+.line-direction {
+  flex-direction: row;
+  display: flex;
+  text-align: center;
+  padding: 10px;
+  align-items: center;
+}
+
+.line-dire-item {
+  width: 45%;
+  flex: 1;
+  text-align: center;
+  font-weight: 700;
+  font-size: 16px;
+}
+
+.line-result {
+  margin-top: 10px;
+  margin-bottom: 15px;
+}
+
+.line-item {
+  width: 45%;
+  text-align: right;
+  padding: 5px;
+}
+
+.current-item {
+  width: 55%;
+  text-align: left center;
+  padding: 5px;
+  color: #ff7500;
+  font-size: 14px;
+}
+
+.next-item {
+  width: 70%;
+  text-align: center;
+  padding: 8px;
+  margin: auto;
+  justify-content: center;
+  display: flex;
+  color: #888;
+  font-size: 14px;
+}
+
+.line-station {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+}
+
+.refresh-msg {
+  text-align: center;
+  padding-top: 4px;
+  font-size: 10px;
+}
+
+.line-switch {
+  width: 34px;
+  height: 34px;
+}
+
+.current-item-logo {
+  width: 24px;
+  height: 24px;
+}
+
+.next-item-logo {
+  width: 16px;
+  height: 20px;
+}
