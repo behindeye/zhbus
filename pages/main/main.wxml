@@ -13,7 +13,15 @@
     </view>
     <view class='search-result'>
       <block wx:for-items="{{lines.data}}" wx:key="{{lines.data.Id}}">
-        <view class='result-item' bindtap='jumpToLine' data-name='{{item.LineNumber}}' data-id='{{item.Id}}' data-begintime='{{item.BeginTime}}' data-endtime='{{item.EndTime}}' data-price='{{item.Price}}' data-fromstation='{{item.FromStation}}' data-tostation='{{item.ToStation}}'>
+        <view class='result-item' bindtap='jumpToLine' data-name='{{item.LineNumber}}' data-id='{{item.Id}}' data-begintime='{{item.BeginTime}}' data-endtime='{{item.EndTime}}' data-price='{{item.Price}}' data-fromstation='{{item.FromStation}}' data-tostation='{{item.ToStation}}'
+          data-obj='{{item}}'>
+          <view class='item-line-name'>{{item.LineNumber}}</view>
+          <view class='item-direction'>{{item.FromStation}} -> {{item.ToStation}}</view>
+        </view>
+      </block>
+      <block wx:for-items="{{caches}}" wx:if="{{flag==1}}" wx:key="{{caches.Id}}">
+        <view class='result-item' bindtap='jumpToLine' data-name='{{item.LineNumber}}' data-id='{{item.Id}}' data-begintime='{{item.BeginTime}}' data-endtime='{{item.EndTime}}' data-price='{{item.Price}}' data-fromstation='{{item.FromStation}}' data-tostation='{{item.ToStation}}'
+          data-obj='{{item}}'>
           <view class='item-line-name'>{{item.LineNumber}}</view>
           <view class='item-direction'>{{item.FromStation}} -> {{item.ToStation}}</view>
         </view>

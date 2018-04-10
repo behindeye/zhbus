@@ -243,6 +243,11 @@ Page({
           refreshStatus: 0
         })
         wx.stopPullDownRefresh()
+        wx.showToast({
+          title: '刷新成功',
+          icon:'none',
+          duration:800,
+        })
       },
       fail: function (res) {
         console.log(res)

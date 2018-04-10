@@ -6,7 +6,21 @@ Page({
    */
   data: {
     lines: {},
-    // task: ""
+    caches: [],
+    flag: 1
+  },
+
+  onLoad: function (options) {
+    var that = this;
+    wx.getStorage({
+      key: 'search-log',
+      success: function (res) {
+        console.log(res.data)
+        that.setData({
+          caches: res.data,
+        })
+      }
+    })
   },
 
   jumpToLine: function (event) {
@@ -17,11 +31,31 @@ Page({
     var price = event.currentTarget.dataset.price
     var fromstation = event.currentTarget.dataset.fromstation
     var tostation = event.currentTarget.dataset.tostation
-    // console.log(name+","+begintime+","+endtime+","+price)
     wx.navigateTo({
       url: '../line/line?id=' + id + "&name=" + name + "&begintime=" + begintime + "&endtime=" + endtime + "&price=" + price + "&fromstation=" + fromstation + "&tostation=" + tostation
     })
 
+    var obj = event.currentTarget.dataset.obj;
+    var length = this.data.caches.length;
+    var tempCache = this.data.caches;
+    var flag = true;
+    for (var i = 0; i < length; ++i) {
+      if (tempCache[i].Id == obj.Id) {
+        flag = false;
+      }
+    }
+    if (flag) {
+      tempCache[length] = obj;
+    }
+    console.log(tempCache)
+    this.setData({
+      caches: tempCache
+    })
+
+    wx.setStorage({
+      key: 'search-log',
+      data: this.data.caches,
+    })
   },
 
   searchBus: function (e) {
@@ -30,10 +64,19 @@ Page({
     var timestamp = Date.parse(new Date())
     timestamp = timestamp / 1000;
 
-    // if (typeof (this.data.task) != "undefined") {
-    //   console.log("abort")
-    //   this.data.task.abort()
-    // }
+    if (keyword == "") {
+      this.setData(
+        {
+          flag: 1
+        }
+      )
+    } else {
+      this.setData(
+        {
+          flag: 0
+        }
+      )
+    }
 
     var requestTask = wx.request({
       url: 'https://api-test.diary.biku8.com/h5/BusQuery',
@@ -57,9 +100,7 @@ Page({
         })
       }
     })
-    // this.setData({
-    //   task: requestTask
-    // })
+
   },
 
   /**
@@ -73,13 +114,6 @@ Page({
    * 生命周期函数--监听页面卸载
    */
   onUnload: function () {
-
-  },
-
-  /**
-   * 页面相关事件处理函数--监听用户下拉动作
-   */
-  onPullDownRefresh: function () {
 
   },
 })
