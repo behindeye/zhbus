@@ -64,7 +64,7 @@ Page({
 
     //ask current bus list for stations 
     that.setData({
-      refreshStatus : 1
+      refreshStatus: 1
     })
     var lineName = this.data.name;
     var fromStation = this.data.fromstation;
@@ -82,18 +82,32 @@ Page({
         that.setData({
           bus: res.data
         })
+        var carNumber = 0;
+        try{
+          if (typeof (that.data.bus) != "undefined") {
+            if (typeof (that.data.bus.data) != "undefined") {
+              carNumber = that.data.bus.data.length;
+            }
+          }
+        }catch(err){
+          console.log(err);
+        }
         wx.setNavigationBarTitle({
-          title: that.data.name+"（共"+that.data.bus.data.length+"辆车）",
+          title: that.data.name + "（共" + carNumber + "辆车）",
         })
         var station = that.data.stations;
         var bus = that.data.bus;
-        for (var i = 0, len = station.data.length; i < len; ++i) {
-          station.data[i].BusNumber = "";
-          station.data[i].LastPosition = -1;
-          for (var j = 0, len2 = bus.data.length; j < len2; ++j) {
-            if (bus.data[j].CurrentStation == station.data[i].Name) {
-              station.data[i].BusNumber = station.data[i].BusNumber + "  \n " + bus.data[j].BusNumber;
-              station.data[i].LastPosition = bus.data[j].LastPosition;
+        if(typeof(bus) != "undefined"){
+          for (var i = 0, len = station.data.length; i < len; ++i) {
+            station.data[i].BusNumber = "";
+            station.data[i].LastPosition = -1;
+            if(typeof(bus.data) != "undefined"){
+              for (var j = 0, len2 = bus.data.length; j < len2; ++j) {
+                if (bus.data[j].CurrentStation == station.data[i].Name) {
+                  station.data[i].BusNumber = station.data[i].BusNumber + "  \n " + bus.data[j].BusNumber;
+                  station.data[i].LastPosition = bus.data[j].LastPosition;
+                }
+              }
             }
           }
         }
@@ -137,13 +151,17 @@ Page({
           })
           var station = that.data.stations;
           var bus = that.data.bus;
-          for (var i = 0, len = station.data.length; i < len; ++i) {
-            station.data[i].BusNumber = "";
-            station.data[i].LastPosition = -1;
-            for (var j = 0, len2 = bus.data.length; j < len2; ++j) {
-              if (bus.data[j].CurrentStation == station.data[i].Name) {
-                station.data[i].BusNumber = station.data[i].BusNumber + "  \n" + bus.data[j].BusNumber;
-                station.data[i].LastPosition = bus.data[j].LastPosition;
+          if (typeof (bus) != "undefined") {
+            for (var i = 0, len = station.data.length; i < len; ++i) {
+              station.data[i].BusNumber = "";
+              station.data[i].LastPosition = -1;
+              if (typeof (bus.data) != "undefined") {
+                for (var j = 0, len2 = bus.data.length; j < len2; ++j) {
+                  if (bus.data[j].CurrentStation == station.data[i].Name) {
+                    station.data[i].BusNumber = station.data[i].BusNumber + "  \n " + bus.data[j].BusNumber;
+                    station.data[i].LastPosition = bus.data[j].LastPosition;
+                  }
+                }
               }
             }
           }
@@ -191,7 +209,7 @@ Page({
    * 生命周期函数--监听页面卸载
    */
   onUnload: function () {
-    
+
   },
 
   /**
@@ -245,8 +263,8 @@ Page({
         wx.stopPullDownRefresh()
         wx.showToast({
           title: '刷新成功',
-          icon:'none',
-          duration:800,
+          icon: 'none',
+          duration: 800,
         })
       },
       fail: function (res) {

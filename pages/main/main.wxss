@@ -28,27 +28,33 @@
   height: 180px;
 }
 
-.search-bar{
+.search-bar {
   display: flex;
   align-items: center;
   padding-top: 5px;
-    border-bottom: 1px solid #cccccc;
-    margin: 5px;
-    border-spacing: 2px;
+  border-bottom: 1px solid #ccc;
+  margin: 5px;
+  border-spacing: 2px;
 }
 
-.search-input{
+.search-input {
   flex: 1;
 }
 
-.item-direction{
+.item-direction {
   font-size: 13px;
-  color: #aaaaaa;
+  color: #aaa;
   padding-top: 3px;
 }
 
-.result-item{
+.result-item {
   margin: 5px;
-  border-bottom: 1px solid #cccccc;
-      border-spacing: 2px;
+  border-bottom: 1px solid #ccc;
+  border-spacing: 2px;
+}
+
+.iten-clear-history {
+  margin-top: 8px;
+  margin-left: 5px;
+  font-size: 13px;
 }

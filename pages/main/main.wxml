@@ -26,6 +26,7 @@
           <view class='item-direction'>{{item.FromStation}} -> {{item.ToStation}}</view>
         </view>
       </block>
+      <view class='iten-clear-history' wx:if="{{flag==1}}" bindtap='clearHistory'>清除历史记录</view>
     </view>
   </view>
 </view>

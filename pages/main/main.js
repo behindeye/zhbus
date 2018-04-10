@@ -7,7 +7,7 @@ Page({
   data: {
     lines: {},
     caches: [],
-    flag: 1
+    flag: 0
   },
 
   onLoad: function (options) {
@@ -16,8 +16,15 @@ Page({
       key: 'search-log',
       success: function (res) {
         console.log(res.data)
+        var f = 0;
+        if (typeof (res.data) != "undefined") {
+          if (res.data.length > 0) {
+            f = 1;
+          }
+        }
         that.setData({
           caches: res.data,
+          flag: f
         })
       }
     })
@@ -36,8 +43,8 @@ Page({
     })
 
     var obj = event.currentTarget.dataset.obj;
-    var length = this.data.caches.length;
     var tempCache = this.data.caches;
+    var length = tempCache.length;
     var flag = true;
     for (var i = 0; i < length; ++i) {
       if (tempCache[i].Id == obj.Id) {
@@ -101,6 +108,17 @@ Page({
       }
     })
 
+  },
+
+  clearHistory: function () {
+    this.setData({
+      caches: [],
+      flag: 0
+    })
+    wx.setStorage({
+      key: 'search-log',
+      data: this.data.caches,
+    })
   },
 
   /**
