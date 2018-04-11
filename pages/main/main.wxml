@@ -1,6 +1,6 @@
 <!--pages/search/search.wxml-->
 <view class="search-container">
-  <image id='banner' src='/image/banner.jpg' mode='scaleToFillf'></image>
+  <image id='banner' src='/image/banner2.jpg' mode='scaleToFill'></image>
   <view>
     <!-- <view class='main-menu'>
     <view class='menu-item item-search-online'>实时查询</view>
