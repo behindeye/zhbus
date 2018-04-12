@@ -1,8 +1,8 @@
 <!--pages/line/line.wxml-->
 <view>
-  <!-- <view class='cover'>
-    <image class='background' src="/image/ns.jpg" mode='scaleToFill'></image>
-  </view> -->
+   <view class='cover'>
+    <image class='background' src="/image/pyy.jpg" mode='aspectFit'></image>
+  </view> 
   <view class='root'>
     <view class='line-direction'>
       <view class='line-dire-item'>{{fromstation}}</view>
