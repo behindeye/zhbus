@@ -1,6 +1,6 @@
 <!--pages/search/search.wxml-->
 <view class="search-container">
-  <image id='banner' src='/image/banner2.jpg' mode='widthFix'></image>
+  <image id='banner' src='/image/banner.jpg' mode='widthFix'></image>
   <view>
     <!-- <view class='main-menu'>
     <view class='menu-item item-search-online'>实时查询</view>
@@ -11,7 +11,7 @@
       <icon type='search' size='20' style='padding:5px;'></icon>
       <input class='search-input' placeholder='请输入线路名称如：8' bindinput='searchBus' focus='true' confirm-type='search' bindconfirm='searchBus'></input>
     </view>
-    <view class='search-result'>
+    <scroll-view class='search-result' scroll-y>
       <block wx:for-items="{{lines.data}}" wx:key="{{lines.data.Id}}">
         <view class='result-item' bindtap='jumpToLine' data-name='{{item.LineNumber}}' data-id='{{item.Id}}' data-begintime='{{item.BeginTime}}' data-endtime='{{item.EndTime}}' data-price='{{item.Price}}' data-fromstation='{{item.FromStation}}' data-tostation='{{item.ToStation}}'
           data-obj='{{item}}'>
@@ -27,6 +27,6 @@
         </view>
       </block>
       <view class='iten-clear-history' wx:if="{{flag==1}}" bindtap='clearHistory'>清除历史记录</view>
-    </view>
+    </scroll-view>
   </view>
 </view>

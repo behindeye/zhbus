@@ -10,6 +10,10 @@
   display: flex;
 }
 
+.search-result{
+  height: 300px;
+}
+
 .item-search-online {
   font-size: 40rpx;
   padding-left: 8px;

@@ -1,12 +1,12 @@
 <!--pages/line/line.wxml-->
 <view>
-   <view class='cover'>
+   <!-- <view class='cover'>
     <image class='background' src="/image/pyy.jpg" mode='aspectFit'></image>
-  </view> 
+  </view>  -->
   <view class='root'>
     <view class='line-direction'>
       <view class='line-dire-item'>{{fromstation}}</view>
-      <image class='line-switch' src='/image/switch.png' mode='aspectFit'>
+      <image class='line-switch' src='/image/switch.png' mode='aspectFit' bindtap='changeLine'>
       </image>
       <view class='line-dire-item'>{{tostation}}</view>
     </view>

@@ -35,34 +35,64 @@ Page({
    * 生命周期函数--监听页面初次渲染完成
    */
   onReady: function () {
+    this.queryLine();
+    var that = this;
+    setInterval(function () {
+      that.queryBusOnRoad();
+    }, 10000)
+  },
+
+  queryLine: function () {
     var that = this;
     var lineId = this.data.id
     var timestamp = Date.parse(new Date());
     timestamp = timestamp / 1000;
-    wx.request({
-      url: 'https://api-test.diary.biku8.com/h5/BusQuery',
-      method: 'get',
-      data: {
-        handlerName: 'GetStationList',
-        lineId: lineId,
-        _: timestamp
-      },
-      success: function (res) {
-        console.log(res.data)
-        that.setData({
-          stations: res.data,
-        })
-      },
-      fail: function (res) {
-        console.log(res)
-        wx.showToast({
-          title: res.errMsg,
-          icon: 'none',
-        })
-      }
-    })
+    var cacheStations = wx.getStorageSync(lineId);
+    if (typeof (cacheStations) == "undefined" || cacheStations == "") {
+      wx.request({
+        url: 'https://api-test.diary.biku8.com/h5/BusQuery',
+        method: 'get',
+        data: {
+          handlerName: 'GetStationList',
+          lineId: lineId,
+          _: timestamp
+        },
+        success: function (res) {
+          console.log(res.data)
+          that.setData({
+            stations: res.data,
+          })
+          wx.setStorage({
+            key: lineId,
+            data: that.data.stations,
+          });
+          that.queryBusOnRoad(0);
+        },
+        fail: function (res) {
+          console.log(res)
+          wx.showToast({
+            title: res.errMsg,
+            icon: 'none',
+          })
+        }
+      })
+    } else {
+      console.log("read cache");
+      that.setData({
+        stations: cacheStations,
+      })
+      that.queryBusOnRoad(0);
+    }
 
+  },
+
+  queryBusOnRoad: function (n) {
     //ask current bus list for stations 
+    var that = this;
+    var lineId = this.data.id
+    var timestamp = Date.parse(new Date());
+    timestamp = timestamp / 1000;
+
     that.setData({
       refreshStatus: 1
     })
@@ -83,13 +113,13 @@ Page({
           bus: res.data
         })
         var carNumber = 0;
-        try{
+        try {
           if (typeof (that.data.bus) != "undefined") {
             if (typeof (that.data.bus.data) != "undefined") {
               carNumber = that.data.bus.data.length;
             }
           }
-        }catch(err){
+        } catch (err) {
           console.log(err);
         }
         wx.setNavigationBarTitle({
@@ -97,11 +127,11 @@ Page({
         })
         var station = that.data.stations;
         var bus = that.data.bus;
-        if(typeof(bus) != "undefined"){
+        if (typeof (bus) != "undefined") {
           for (var i = 0, len = station.data.length; i < len; ++i) {
             station.data[i].BusNumber = "";
             station.data[i].LastPosition = -1;
-            if(typeof(bus.data) != "undefined"){
+            if (typeof (bus.data) != "undefined") {
               for (var j = 0, len2 = bus.data.length; j < len2; ++j) {
                 if (bus.data[j].CurrentStation == station.data[i].Name) {
                   station.data[i].BusNumber = station.data[i].BusNumber + "  \n " + bus.data[j].BusNumber;
@@ -118,6 +148,15 @@ Page({
         that.setData({
           refreshStatus: 0
         })
+
+        if (n == 1) {
+          wx.stopPullDownRefresh()
+          wx.showToast({
+            title: '刷新成功',
+            icon: 'none',
+            duration: 800,
+          })
+        }
       },
       fail: function (res) {
         console.log(res)
@@ -131,167 +170,117 @@ Page({
         })
       }
     })
+  },
 
-    setInterval(function () {
-      that.setData({
-        refreshStatus: 1
-      })
+  changeLine: function (e) {
+    var that = this;
+    var cacheLineList = wx.getStorageSync(that.data.name);
+    if (typeof (cacheLineList) == "undefined" || cacheLineList == "") {
+      var timestamp = Date.parse(new Date());
+      timestamp = timestamp / 1000;
       wx.request({
         url: 'https://api-test.diary.biku8.com/h5/BusQuery',
         method: 'get',
         data: {
-          handlerName: 'GetBusListOnRoad',
-          lineName: lineName,
-          fromStation: fromStation,
+          handlerName: 'GetLineList',
+          lineName: that.data.name,
           _: timestamp
         },
         success: function (res) {
-          that.setData({
-            bus: res.data
-          })
-          var station = that.data.stations;
-          var bus = that.data.bus;
-          if (typeof (bus) != "undefined") {
-            for (var i = 0, len = station.data.length; i < len; ++i) {
-              station.data[i].BusNumber = "";
-              station.data[i].LastPosition = -1;
-              if (typeof (bus.data) != "undefined") {
-                for (var j = 0, len2 = bus.data.length; j < len2; ++j) {
-                  if (bus.data[j].CurrentStation == station.data[i].Name) {
-                    station.data[i].BusNumber = station.data[i].BusNumber + "  \n " + bus.data[j].BusNumber;
-                    station.data[i].LastPosition = bus.data[j].LastPosition;
-                  }
-                }
-              }
-            }
+          console.log(res.data);
+          that.setChangeInfo(res.data);
+          if (typeof (res.data) != "undefined") {
+          //   var tempId = that.data.id;
+          //   for (var i = 0, len = res.data.data.length; i < len; ++i) {
+          //     var obj = res.data.data[i];
+          //     if (typeof (obj) != "undefined") {
+          //       var id = obj.Id;
+          //       if (tempId != id) {
+          //         that.setData({
+          //           id: obj.Id,
+          //           name: obj.Name,
+          //           begintime: obj.BeginTime,
+          //           endtime: obj.EndTime,
+          //           price: obj.Price,
+          //           tostation: obj.ToStation,
+          //           fromstation: obj.FromStation
+          //         })
+          //       }
+          //     }
+          //   }
+            // that.queryLine();
+            wx.setStorage({
+              key: that.data.name,
+              data: res.data,
+            })
           }
-          that.setData({
-            stations: station
-          })
-
-          that.setData({
-            refreshStatus: 0
-          })
-
         },
         fail: function (res) {
-          console.log(res)
           wx.showToast({
             title: res.errMsg,
             icon: 'none',
           })
-          that.setData({
-            refreshStatus: 0
-          })
         }
       })
-    }, 10000)
+    } else {
+      console.log("read line list from cache");
+      console.log(cacheLineList);
+      this.setChangeInfo(cacheLineList);
+      // if (typeof (cacheLineList) != "undefined" &&
+      //   typeof (cacheLineList.data) != "undefined") {
+      //   var tempId = that.data.id;
+      //   for (var i = 0, len = cacheLineList.data.length; i < len; ++i) {
+      //     var obj = cacheLineList.data[i];
+      //     if (typeof (obj) != "undefined") {
+      //       var id = obj.Id;
+      //       if (tempId != id) {
+      //         that.setData({
+      //           id: obj.Id,
+      //           name: obj.Name,
+      //           begintime: obj.BeginTime,
+      //           endtime: obj.EndTime,
+      //           price: obj.Price,
+      //           tostation: obj.ToStation,
+      //           fromstation: obj.FromStation
+      //         })
+      //       }
+      //     }
+      //   }
+        // that.queryLine();
+      // }
+    }
+
   },
 
-  /**
-   * 生命周期函数--监听页面显示
-   */
-  onShow: function () {
-    var barTitle = this.data.name
-    wx.setNavigationBarTitle({
-      title: barTitle
-    })
-  },
-
-  /**
-   * 生命周期函数--监听页面隐藏
-   */
-  onHide: function () {
-
-  },
-
-  /**
-   * 生命周期函数--监听页面卸载
-   */
-  onUnload: function () {
-
+  setChangeInfo: function (obj) {
+    if (typeof (obj) != "undefined" &&
+      typeof (obj.data) != "undefined") {
+      var tempId = this.data.id;
+      for (var i = 0, len = obj.data.length; i < len; ++i) {
+        var item = obj.data[i];
+        if (typeof (obj) != "undefined") {
+          var id = item.Id;
+          if (tempId != id) {
+            this.setData({
+              id: item.Id,
+              name: item.Name,
+              begintime: item.BeginTime,
+              endtime: item.EndTime,
+              price: item.Price,
+              tostation: item.ToStation,
+              fromstation: item.FromStation
+            })
+          }
+        }
+      }
+      this.queryLine();
+    }
   },
 
   /**
    * 页面相关事件处理函数--监听用户下拉动作
    */
   onPullDownRefresh: function () {
-    //ask current bus list for stations 
-    var that = this;
-    var lineId = this.data.id
-    var timestamp = Date.parse(new Date());
-    timestamp = timestamp / 1000;
-    that.setData({
-      refreshStatus: 1
-    })
-    var lineName = this.data.name;
-    var fromStation = this.data.fromstation;
-    wx.request({
-      url: 'https://api-test.diary.biku8.com/h5/BusQuery',
-      method: 'get',
-      data: {
-        handlerName: 'GetBusListOnRoad',
-        lineName: lineName,
-        fromStation: fromStation,
-        _: timestamp
-      },
-      success: function (res) {
-        console.log(res.data)
-        that.setData({
-          bus: res.data
-        })
-
-        var station = that.data.stations;
-        var bus = that.data.bus;
-        for (var i = 0, len = station.data.length; i < len; ++i) {
-          station.data[i].BusNumber = "";
-          station.data[i].LastPosition = -1;
-          for (var j = 0, len2 = bus.data.length; j < len2; ++j) {
-            if (bus.data[j].CurrentStation == station.data[i].Name) {
-              station.data[i].BusNumber = station.data[i].BusNumber + "  \n " + bus.data[j].BusNumber;
-              station.data[i].LastPosition = bus.data[j].LastPosition;
-            }
-          }
-        }
-        that.setData({
-          stations: station
-        })
-        console.log("refresh")
-        that.setData({
-          refreshStatus: 0
-        })
-        wx.stopPullDownRefresh()
-        wx.showToast({
-          title: '刷新成功',
-          icon: 'none',
-          duration: 800,
-        })
-      },
-      fail: function (res) {
-        console.log(res)
-        wx.showToast({
-          title: res.errMsg,
-          icon: 'none',
-        })
-        wx.stopPullDownRefresh()
-        that.setData({
-          refreshStatus: 0
-        })
-      }
-    })
+    this.queryBusOnRoad(1);
   },
-
-  /**
-   * 页面上拉触底事件的处理函数
-   */
-  onReachBottom: function () {
-
-  },
-
-  /**
-   * 用户点击右上角分享
-   */
-  onShareAppMessage: function () {
-
-  }
 })
