@@ -19,7 +19,7 @@
           <image class='current-item-logo' wx:if="{{item.LastPosition == 5}}" src='/image/bus.png' mode='aspectFit'></image>
           <view class='current-item' wx:if="{{item.LastPosition == 5}}">{{item.BusNumber}}</view>
         </view>
-        <view class='next-item' wx:if="{{item.LastPosition == 8}}">
+        <view class='next-item' animation="{{animation}}" wx:if="{{item.LastPosition == 8}}">
           <image src='/image/arrow.png' mode='aspectFit' class='next-item-logo'></image>
           <view>{{item.BusNumber}}</view>
         </view>

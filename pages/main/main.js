@@ -7,7 +7,7 @@ Page({
   data: {
     lines: {},
     caches: [],
-    flag: 0
+    flag: 0,
   },
 
   onLoad: function (options) {
@@ -51,9 +51,11 @@ Page({
         flag = false;
       }
     }
-    if (flag) {
-      tempCache[length] = obj;
+    if (!flag) {
+      tempCache.splice(index, 1);
     }
+    tempCache.splice(0, 0, obj);
+    
     console.log(tempCache)
     this.setData({
       caches: tempCache
@@ -85,7 +87,7 @@ Page({
       )
     }
 
-    var requestTask = wx.request({
+    const requestTask = wx.request({
       url: 'https://api-test.diary.biku8.com/h5/BusQuery',
       method: 'get',
       data: {

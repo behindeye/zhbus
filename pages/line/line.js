@@ -96,6 +96,7 @@ Page({
     that.setData({
       refreshStatus: 1
     })
+    wx.showNavigationBarLoading();
     var lineName = this.data.name;
     var fromStation = this.data.fromstation;
     wx.request({
@@ -157,9 +158,11 @@ Page({
             duration: 800,
           })
         }
+        wx.hideNavigationBarLoading();
       },
       fail: function (res) {
         console.log(res)
+        wx.hideNavigationBarLoading();
         wx.showToast({
           title: res.errMsg,
           icon: 'none',
@@ -190,25 +193,6 @@ Page({
           console.log(res.data);
           that.setChangeInfo(res.data);
           if (typeof (res.data) != "undefined") {
-          //   var tempId = that.data.id;
-          //   for (var i = 0, len = res.data.data.length; i < len; ++i) {
-          //     var obj = res.data.data[i];
-          //     if (typeof (obj) != "undefined") {
-          //       var id = obj.Id;
-          //       if (tempId != id) {
-          //         that.setData({
-          //           id: obj.Id,
-          //           name: obj.Name,
-          //           begintime: obj.BeginTime,
-          //           endtime: obj.EndTime,
-          //           price: obj.Price,
-          //           tostation: obj.ToStation,
-          //           fromstation: obj.FromStation
-          //         })
-          //       }
-          //     }
-          //   }
-            // that.queryLine();
             wx.setStorage({
               key: that.data.name,
               data: res.data,
@@ -226,30 +210,7 @@ Page({
       console.log("read line list from cache");
       console.log(cacheLineList);
       this.setChangeInfo(cacheLineList);
-      // if (typeof (cacheLineList) != "undefined" &&
-      //   typeof (cacheLineList.data) != "undefined") {
-      //   var tempId = that.data.id;
-      //   for (var i = 0, len = cacheLineList.data.length; i < len; ++i) {
-      //     var obj = cacheLineList.data[i];
-      //     if (typeof (obj) != "undefined") {
-      //       var id = obj.Id;
-      //       if (tempId != id) {
-      //         that.setData({
-      //           id: obj.Id,
-      //           name: obj.Name,
-      //           begintime: obj.BeginTime,
-      //           endtime: obj.EndTime,
-      //           price: obj.Price,
-      //           tostation: obj.ToStation,
-      //           fromstation: obj.FromStation
-      //         })
-      //       }
-      //     }
-      //   }
-        // that.queryLine();
-      // }
     }
-
   },
 
   setChangeInfo: function (obj) {
